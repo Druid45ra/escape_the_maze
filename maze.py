@@ -9,29 +9,17 @@ def generate_maze():
     """Generates a simple maze using a random algorithm."""
     maze = [[1 for _ in range(MAZE_WIDTH)] for _ in range(MAZE_HEIGHT)]
 
-    stack = []
-    visited = set()
-
-    start_x, start_y = 0, 0  # Starting position in the maze
-    stack.append((start_x, start_y))
-    visited.add((start_x, start_y))
+    stack = [(0, 0)]  # Starting position in the maze
+    maze[0][0] = 0  # Mark as a path
 
     while stack:
         current_x, current_y = stack[-1]
-        maze[current_y][current_x] = 0  # Mark as a path
-
         # Get valid neighbors
         neighbors = []
-        directions = [
-            (0, -2),  # Up
-            (0, 2),   # Down
-            (-2, 0),  # Left
-            (2, 0)    # Right
-        ]
-
+        directions = [(0, -2), (0, 2), (-2, 0), (2, 0)]
         for dx, dy in directions:
             nx, ny = current_x + dx, current_y + dy
-            if 0 <= nx < MAZE_WIDTH and 0 <= ny < MAZE_HEIGHT and (nx, ny) not in visited:
+            if 0 <= nx < MAZE_WIDTH and 0 <= ny < MAZE_HEIGHT and maze[ny][nx] == 1:
                 neighbors.append((nx, ny))
 
         if neighbors:
@@ -44,7 +32,7 @@ def generate_maze():
 
             # Move to the next cell
             stack.append((next_x, next_y))
-            visited.add((next_x, next_y))
+            maze[next_y][next_x] = 0  # Mark as a path
         else:
             stack.pop()  # Backtrack
 
@@ -52,13 +40,12 @@ def generate_maze():
 
 def draw_maze(screen, maze):
     """Draws the maze on the screen."""
-    for y, row in enumerate(maze):
-        for x, tile in enumerate(row):
-            if tile == 1:  # Wall
-                pygame.draw.rect(
-                    screen, (0, 0, 0),
-                    (x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-                )
+    wall_rects = [
+        pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+        for y, row in enumerate(maze)
+        for x, tile in enumerate(row) if tile == 1
+    ]
+    pygame.draw.rects(screen, (0, 0, 0), wall_rects)
 
 if __name__ == "__main__":
     pygame.init()

@@ -55,7 +55,13 @@ obstacles = [
 
 
 # Function to check collision with obstacles
-def check_collision(x, y):
+def check_collision(x: int, y: int) -> bool:
+    """Check if the player collides with any obstacles.
+
+    :param x: The x-coordinate of the player.
+    :param y: The y-coordinate of the player.
+    :return: True if a collision is detected, otherwise False.
+    """
     player_rect = pygame.Rect(x, y, player_width, player_height)
     for obstacle in obstacles:
         if player_rect.colliderect(obstacle):

@@ -9,15 +9,8 @@ class Player:
 
     def move(self, keys, obstacles):
         """Move the player based on key inputs and check for collisions."""
-        dx, dy = 0, 0
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            dx = -self.speed
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            dx = self.speed
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
-            dy = -self.speed
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            dy = self.speed
+        dx = -self.speed if (keys[pygame.K_LEFT] or keys[pygame.K_a]) else self.speed if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) else 0
+        dy = -self.speed if (keys[pygame.K_UP] or keys[pygame.K_w]) else self.speed if (keys[pygame.K_DOWN] or keys[pygame.K_s]) else 0
 
         # Check for collisions before moving
         new_rect = self.rect.move(dx, dy)
@@ -26,10 +19,7 @@ class Player:
 
     def check_collision(self, new_rect, obstacles):
         """Check if the player collides with any obstacles."""
-        for obstacle in obstacles:
-            if new_rect.colliderect(obstacle):
-                return True
-        return False
+        return any(new_rect.colliderect(obstacle) for obstacle in obstacles)
 
     def draw(self, screen: pygame.Surface) -> None:
         """Draw the player on the screen.
@@ -37,4 +27,4 @@ class Player:
         :param screen: The surface to draw on.
         :type screen: pygame.Surface
         """
-        pygame.draw.rect(screen, self.color, self.rect)
+        screen.fill(self.color, self.rect)
