@@ -38,10 +38,10 @@ player_speed = 5  # Player speed
 
 # Obstacles (coordinates and dimensions)
 obstacles = [
-    pygame.Rect(100, 100, 200, 20),  # Obstacle 1
-    pygame.Rect(400, 150, 20, 200),  # Obstacle 2
-    pygame.Rect(200, 300, 200, 20),  # Obstacle 3
-    pygame.Rect(100, 450, 20, 100),  # Obstacle 4
+    pygame.Rect(100, 150, 200, 20),  # Obstacle 1 (moved down)
+    pygame.Rect(500, 100, 20, 200),  # Obstacle 2 (moved right)
+    pygame.Rect(200, 400, 200, 20),  # Obstacle 3 (moved down)
+    pygame.Rect(600, 450, 20, 100),  # Obstacle 4 (moved right)
 ]
 
 # Function to check collision with obstacles
