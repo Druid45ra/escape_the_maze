@@ -39,13 +39,17 @@ def generate_maze():
     return maze
 
 def draw_maze(screen, maze):
-    """Draws the maze on the screen."""
-    wall_rects = [
-        pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-        for y, row in enumerate(maze)
-        for x, tile in enumerate(row) if tile == 1
-    ]
-    pygame.draw.rects(screen, (0, 0, 0), wall_rects)
+    wall_rects = []
+    for row_idx, row in enumerate(maze):
+        for col_idx, cell in enumerate(row):
+            if cell == 1:  # If cell is a wall
+                rect = pygame.Rect(col_idx * 40, row_idx * 40, 40, 40)
+                wall_rects.append(rect)
+
+    # Draw each wall
+    for rect in wall_rects:
+        pygame.draw.rect(screen, (0, 0, 0), rect)
+
 
 if __name__ == "__main__":
     pygame.init()
