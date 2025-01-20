@@ -1,5 +1,14 @@
 import pygame
 import os
+from maze import generate_maze, draw_maze
+from player import Player
+
+# Maze settings
+maze = generate_maze()
+TILE_SIZE = 40
+
+# Player settings
+player = Player(0, 0, TILE_SIZE, TILE_SIZE, speed=5)
 
 # Initialize Pygame
 pygame.init()
@@ -10,8 +19,8 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Escape the Maze")
 
 # Colors
-duck_egg_green = (124, 252, 0)
-obstacle_color = (0, 0, 0)  # Obstacles color (black)
+duck_egg_green = (124, 252, 0)  # Background color
+obstacle_color = (0, 0, 0)      # Obstacles color (black)
 
 # Clock and variables
 clock = pygame.time.Clock()
@@ -32,37 +41,52 @@ except pygame.error as e:
 player_width, player_height = 40, 40
 player_img = pygame.transform.scale(player_img, (player_width, player_height))
 
-# Initial player position
-player_x, player_y = WIDTH // 2, HEIGHT // 2
+# Initial player position (top-left corner)
+player_x, player_y = 0, 0
 player_speed = 5  # Player speed
 
 # Obstacles (coordinates and dimensions)
 obstacles = [
-    pygame.Rect(100, 150, 200, 20),  # Obstacle 1 (moved down)
-    pygame.Rect(500, 100, 20, 200),  # Obstacle 2 (moved right)
-    pygame.Rect(200, 400, 200, 20),  # Obstacle 3 (moved down)
-    pygame.Rect(600, 450, 20, 100),  # Obstacle 4 (moved right)
+    pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+    for y, row in enumerate(maze)
+    for x, tile in enumerate(row)
+    if tile == 1
 ]
 
+
 # Function to check collision with obstacles
-def check_collision(x, y, obstacles):
+def check_collision(x, y):
     player_rect = pygame.Rect(x, y, player_width, player_height)
     for obstacle in obstacles:
         if player_rect.colliderect(obstacle):
-            return True  # Collision
+            return True  # Collision detected
     return False  # No collision
 
-# Main loop
 running = True
 while running:
+    # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
     # Get the state of pressed keys
     keys = pygame.key.get_pressed()
+
+    # Move the player
+    player.move(keys, obstacles=[])
+
+    # Draw everything
+    screen.fill(duck_egg_green)  # Draw background
+    draw_maze(screen, maze)  # Draw maze
+    player.draw(screen)  # Draw player
+
+    # Update the screen
+    pygame.display.flip()
+
+    # Control the frame rate
+    clock.tick(60)
     
-    # Player movement
+    # Calculate new position
     new_x, new_y = player_x, player_y
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         new_x -= player_speed
@@ -73,19 +97,17 @@ while running:
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
         new_y += player_speed
 
-    # Check collision with obstacles before changing position
-    if not check_collision(new_x, new_y, obstacles):
+    # Check collision with obstacles before updating position
+    if not check_collision(new_x, new_y):
         player_x, player_y = new_x, new_y
 
-    # Fill the background color
-    screen.fill(duck_egg_green)
+    # Draw everything
+    screen.fill(duck_egg_green)  # Draw background
 
-    # Draw obstacles on the screen
-    for obstacle in obstacles:
+    for obstacle in obstacles:  # Draw obstacles
         pygame.draw.rect(screen, obstacle_color, obstacle)
 
-    # Display the player
-    screen.blit(player_img, (player_x, player_y))
+    screen.blit(player_img, (player_x, player_y))  # Draw player
 
     # Update the screen
     pygame.display.flip()
