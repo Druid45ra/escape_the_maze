@@ -53,7 +53,6 @@ obstacles = [
     if tile == 1
 ]
 
-
 # Function to check collision with obstacles
 def check_collision(x: int, y: int) -> bool:
     """Check if the player collides with any obstacles.
@@ -78,20 +77,6 @@ while running:
     # Get the state of pressed keys
     keys = pygame.key.get_pressed()
 
-    # Move the player
-    player.move(keys, obstacles=[])
-
-    # Draw everything
-    screen.fill(duck_egg_green)  # Draw background
-    draw_maze(screen, maze)  # Draw maze
-    player.draw(screen)  # Draw player
-
-    # Update the screen
-    pygame.display.flip()
-
-    # Control the frame rate
-    clock.tick(60)
-    
     # Calculate new position
     new_x, new_y = player_x, player_y
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
@@ -109,10 +94,7 @@ while running:
 
     # Draw everything
     screen.fill(duck_egg_green)  # Draw background
-
-    for obstacle in obstacles:  # Draw obstacles
-        pygame.draw.rect(screen, obstacle_color, obstacle)
-
+    draw_maze(screen, maze)  # Draw maze
     screen.blit(player_img, (player_x, player_y))  # Draw player
 
     # Update the screen

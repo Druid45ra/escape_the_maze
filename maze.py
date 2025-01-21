@@ -43,13 +43,12 @@ def draw_maze(screen, maze):
     for row_idx, row in enumerate(maze):
         for col_idx, cell in enumerate(row):
             if cell == 1:  # If cell is a wall
-                rect = pygame.Rect(col_idx * 40, row_idx * 40, 40, 40)
+                rect = pygame.Rect(col_idx * TILE_SIZE, row_idx * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                 wall_rects.append(rect)
 
     # Draw each wall
     for rect in wall_rects:
         pygame.draw.rect(screen, (0, 0, 0), rect)
-
 
 if __name__ == "__main__":
     pygame.init()
